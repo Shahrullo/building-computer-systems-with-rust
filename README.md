@@ -6,7 +6,7 @@ This repository contains projects aimed at helping you understand the Rust progr
 
 ## Projects
 
-1. **CPU**: An implementation of a simple CPU to understand how processors execute instructions and handle data.
+1. **[CPU](https://github.com/Shahrullo/building-computer-systems-with-rust/tree/main/CPU)**: An implementation of a simple CPU to understand how processors execute instructions and handle data.
 2. **Virtual Memory**: An implementation of virtual memory management to learn about memory addressing, paging, and memory protection.
 3. **File System**: A simple file system implementation to learn about data storage and organization on disk.
 4. **Networking**: A basic network stack implementation to learn about networking protocols, packet handling, and communication.

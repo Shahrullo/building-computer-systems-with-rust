@@ -12,6 +12,9 @@ This repository contains projects aimed at helping you understand the Rust progr
 4. **Networking**: A basic network stack implementation to learn about networking protocols, packet handling, and communication.
 5. **OS Kernel**: A minimal kernel implementation to understand the basics of operating system development, process management, and system calls.
 
+### General Rust projects
+6. **Multithreaded Web Server**: A pure multithreaded web server without using high-level packages
+
 ## Getting Started
 1. Install Rust by following the instructions on [installing rust](https://www.rust-lang.org/tools/install).
 2. Clone this repository: `git clone https://github.com/Shahrullo/building-computer-systems-with-rust`. [`cargo`](https://doc.rust-lang.org/stable/cargo/) should also be installed together with Rust.

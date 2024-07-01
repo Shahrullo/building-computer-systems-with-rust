@@ -7,3 +7,8 @@ The project spans the following listings. It is a quite large project. Each file
 - `ethernet.rs` — Generates a MAC address and converts between MAC address types (defined by the smoltcp crate).
 - `http.rs` — Carries out the work of interacting with the server to make the HTTP request.
 - `dns.rs` — Performs DNS resolution, which converts a domain name to an IP address.
+
+## Run the project
+Run `cargo run` in the project's root.
+
+!Make sure rustc and cargo are installed in the machine.

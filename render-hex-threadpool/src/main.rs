@@ -18,7 +18,7 @@ use crate::Orientation::{
     North,
     South,
     West
-}
+};
 
 const WIDTH: isize = 400;
 const HEIGHT: isize = WIDTH;
@@ -112,6 +112,95 @@ impl Artist {
     }
 }
 
+fn parse(input: &str) -> Vec<Operation> {
+    let mut steps = Vec::<Operation>::new();
+    for byte in input.bytes() {
+        let step = match byte {
+            b'0' => Home,
+            b'1'..=b'9' => {
+                let distance = (byte - 0x30)  as isize;
+                Forward(distance * (HEIGHT / 10))
+            }
+            b'a' | b'b' | b'c' => TurnLeft,
+            b'd' | b'e' | b'f' => TurnRight,
+            _ => Noop(byte),
+        };
+        steps.push(step);
+    }
+    steps
+}
+
+fn convert(operations: &Vec<Operation>) -> Vec<Command> {
+    let mut turtle = Artist::new();
+
+    let mut path_data = Vec::<Command>::with_capacity(operations.len());
+    let start_at_home = Command::Move(
+        Position::Absolute, (HOME_X, HOME_Y).into()
+    );
+    path_data.push(start_at_home);
+
+    for op in operations {
+        match *op {
+            Forward(distance) => turtle.forward(distance),
+            TurnLeft => turtle.turn_left(),
+            TurnRight => turtle.turn_right(),
+            Home => turtle.home(),
+            Noop(byte) => {
+                eprintln!("warning: illegal byte encountered: {:?}", byte);
+            },
+        };
+
+        let path_segment = Command::Line(Position::Absolute, (turtle.x, turtle.y).into()
+    );
+    path_data.push(path_segment);
+
+    turtle.wrap();
+    }
+
+    path_data
+}
+
+fn generate_svg(path_data: Vec<Command>) -> Document {
+    let background = Rectangle::new()
+        .set("x", 0)
+        .set("y", 0)
+        .set("width", WIDTH)
+        .set("height", HEIGHT)
+        .set("fill", "#ffffff");
+
+    let border = background
+        .clone()
+        .set("fill-opacity", "0.0")
+        .set("stroke", "#cccccc")
+        .set("stroke-width", 3 * STROKE_WIDTH);
+
+    let sketch = Path::new()
+        .set("fill", "none")
+        .set("stroke", "#2f2f2f")
+        .set("stroke-width", STROKE_WIDTH)
+        .set("stroke-opacity", "0.9")
+        .set("d", Data::from(path_data));
+
+    let document = Document::new()
+        .set("viewBox", (0, 0, HEIGHT, WIDTH))
+        .set("height", HEIGHT)
+        .set("width", WIDTH)
+        .set("style", "style=\"outline: 5px solid #800000;\"")
+        .add(background)
+        .add(sketch)
+        .add(border);
+
+    document
+}
+
 fn main() {
-    todo!()
+    let args = env::args().collect::<Vec<String>>();
+    let input = args.get(1).unwrap();
+    let default_filename = format!("{}.svg", input);
+    let save_to = args.get(2).unwrap_or(&default_filename);
+
+    let operations = parse(input);
+    let path_data = convert(&operations);
+    let document = generate_svg(path_data);
+    svg::save(save_to, &document).unwrap();
 }
